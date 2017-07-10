@@ -12,14 +12,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static SeekBar seek_bar;
-    private static TextView text_view;
+    SeekBar seek_bar;
+    TextView text_view;
     int progress = 1;
+    List<String> list;
+    ArrayAdapter adapter;
+    ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         seekBar();
+
+        list = new ArrayList<String>();
+
+        String b = "";
+
+            for(int j = 1; j<= 10; j++)
+            {
+
+                b = 5 + "*" + j + "=" + 5 * j;
+                list.add(b);
+            }
+
+
+
+        adapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,list);
+
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+
+
         /*
         List<String> list = new ArrayList<String>();
 
@@ -45,11 +68,12 @@ public class MainActivity extends AppCompatActivity {
     int progress_val;
     public void seekBar() {
         seek_bar = (SeekBar) findViewById(R.id.seekBar);
+        seek_bar.setProgress(5);
         text_view = (TextView) findViewById(R.id.textView);
 
         seek_bar.setMax(10);
 
-        text_view.setText("Covered : " + seek_bar.getProgress() + " / " + seek_bar.getMax());
+        //text_view.setText("Covered : " + seek_bar.getProgress() + " / " + seek_bar.getMax());
 
 
 
@@ -60,28 +84,23 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
 
-                List<String> list = new ArrayList<String>();
-
-                ArrayAdapter adapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,list);
-
-                ListView listView = (ListView) findViewById(R.id.listView);
-                listView.setAdapter(adapter);
+                progress = progress + 1;
 
                 String b = "";
-                /*
-                for(int i = 1; i<=10; i++)
-                {
+
+                list.clear();
                     for(int j = 1; j<= 10; j++)
                     {
-                        int a = i*j;
 
-                        b = i + "*" + j + "=" + i * j;
+
+                        b = progress + "*" + j + "=" + progress * j;
                         list.add(b);
                     }
 
-                }
-                */
+                    adapter.notifyDataSetChanged();
 
+
+                /*
                 progress_val = progress + 1;
 
                 text_view.setText("Covered : " + progress + " / " + seek_bar.getMax());
@@ -241,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
+                */
 
             }
 
@@ -252,8 +272,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
-                text_view.setText("Covered : " + progress_val + " / " + seek_bar.getMax());
-                Toast.makeText(MainActivity.this,"Seekbar In End",Toast.LENGTH_SHORT);
             }
         });
     }
